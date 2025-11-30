@@ -294,7 +294,7 @@
                     
                     <div class="code-block mb-4">
                         <div class="code-header">
-                            <span>main.lua</span>
+                            <span>Codeblock</span>
                             <button id="copyScriptButton" class="text-xs rayfield-button px-2 py-0.5 rounded-md hover:bg-rb-accent-main hover:text-rb-text-dark">
                                 <i data-lucide="copy" class="w-3 h-3 inline mr-1"></i> Copy
                             </button>
@@ -377,10 +377,10 @@
             const copyButton = document.getElementById('copyScriptButton');
             
             // Set a default script to be copied (the one from the original Lua script)
-            const scriptToCopy = 'loadstring(game:HttpGet([[https://raw.githubusercontent.com/reprenzy-hue/RayBeats/refs/heads/main/source.lua]]))()';
+            const scriptToCopy = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/reprenzy-hue/RayBeats/refs/heads/main/source.lua"))()';
             
             // Initial content for the user to fill in
-            const defaultPlaceholder = `-- INSERT RAYBEATS LUA SCRIPT HERE\nloadstring(game:HttpGet("YOUR_LINK_HERE"))()`;
+            const defaultPlaceholder = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/reprenzy-hue/RayBeats/refs/heads/main/source.lua"))()';
             scriptContentEl.textContent = defaultPlaceholder;
 
 
