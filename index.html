@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RayBeats - The Ultimate Roblox Music Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Lucide icons for UI look and feel -->
+    <script type="module" src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom StoneCream Theme Colors and Setup */
+        :root {
+            --rb-bg: #161618; /* Background (22, 22, 24) */
+            --rb-topbar: rgba(28, 28, 30, 0.9); /* Topbar with Transparency for Blur */
+            --rb-element: #202023; /* ElementBackground (32, 32, 35) */
+            --rb-stroke: #37373A; /* Enhanced stroke for web contrast */
+            --rb-accent-main: #DCD7B4; /* TabBackgroundSelected, ToggleEnabled (StoneCream color) */
+            --rb-accent-progress: #C3B491; /* SliderProgress */
+            --rb-text: #E6E6E6; /* TextColor */
+            --rb-text-dark: #161618; /* SelectedTabTextColor */
+            --rb-card-bg: rgba(32, 32, 35, 0.6); /* Transparent background for blur effect */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--rb-bg);
+            color: var(--rb-text);
+            line-height: 1.6;
+            /* Optional: Add a subtle background pattern for the blur to work better */
+            background-image: radial-gradient(circle at 1px 1px, #1c1c1e 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        /* Rayfield Scrollbar Style */
+        .rayfield-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .rayfield-scroll::-webkit-scrollbar-thumb {
+            background-color: var(--rb-element);
+            border-radius: 4px;
+        }
+        .rayfield-scroll::-webkit-scrollbar-thumb:hover {
+            background-color: var(--rb-stroke);
+        }
+
+        /* ----- BLUR & FROSTED GLASS STYLES ----- */
+        .frosted-header {
+            background-color: var(--rb-topbar);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px); /* For Safari support */
+        }
+        
+        .frosted-card {
+            background-color: var(--rb-card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--rb-stroke);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .frosted-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Animation Styles (Fade-in on scroll) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom Colors */
+        .rayfield-accent {
+            color: var(--rb-accent-main);
+        }
+        .rayfield-button {
+            background-color: var(--rb-element);
+            border: 1px solid var(--rb-stroke);
+            color: var(--rb-text);
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+        }
+        .rayfield-button:hover {
+            background-color: #2A2A2D;
+            border-color: var(--rb-accent-progress);
+        }
+
+        /* Class for Markdown Content */
+        .markdown-content {
+            white-space: pre-wrap; /* Preserve formatting for simple markdown */
+        }
+    </style>
+</head>
+<body class="rayfield-scroll">
+
+    <!-- Sticky Header Navigation with Blur -->
+    <header class="sticky top-0 z-50 frosted-header border-b border-rb-stroke shadow-lg">
+        <div class="max-w-7xl mx-auto p-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="music-4" class="w-6 h-6 rayfield-accent"></i>
+                <span class="text-xl font-bold">RayBeats</span>
+                <span class="text-xs font-mono ml-4 px-2 py-0.5 bg-rb-element rounded border border-rb-stroke opacity-70">Stable v5.2</span>
+            </div>
+            <nav class="space-x-6 hidden md:flex text-sm">
+                <a href="#features" class="hover:text-rb-accent-main transition duration-200">Features</a>
+                <a href="#how-to" class="hover:text-rb-accent-main transition duration-200">Usage</a>
+                <a href="#credits" class="hover:text-rb-accent-main transition duration-200">Credits</a>
+            </nav>
+            <a href="#cta" class="rayfield-button px-4 py-2 rounded-lg text-sm font-semibold hover:bg-rb-accent-main hover:text-rb-text-dark">
+                <i data-lucide="download" class="w-4 h-4 mr-1"></i> Get Script
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto p-8 pt-16 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section class="text-center space-y-8 pt-12">
+            <h1 class="text-5xl md:text-8xl font-extrabold tracking-tighter">
+                <span class="rayfield-accent">RayBeats</span>: The <br class="md:hidden"> <span class="text-white">Audio Overlord</span>
+            </h1>
+            <p class="text-lg md:text-2xl max-w-4xl mx-auto opacity-80 font-medium">
+                Experience unparalleled local music control on Roblox. Featuring a pristine, Rayfield-inspired UI, professional audio effects, and robust playlist management—all styled with the exclusive **StoneCream Theme**.
+            </p>
+            <a href="#cta" class="inline-block rayfield-button px-10 py-3 rounded-xl text-xl font-bold shadow-2xl bg-rb-accent-main text-rb-text-dark hover:bg-rb-accent-progress transition duration-300">
+                <i data-lucide="play-circle" class="w-6 h-6 mr-2"></i> Start the Session
+            </a>
+            <p class="text-sm opacity-50 font-mono pt-6">RayBeats © 2025 FynLabs. All rights reserved.</p>
+        </section>
+
+        <!-- FEATURES SECTION (Stacked Cards) -->
+        <section id="features" class="space-y-12">
+            <h2 class="text-4xl font-bold text-center mb-10">Key <span class="rayfield-accent">Features</span></h2>
+
+            <!-- Changed from Grid to single-column stack, centered -->
+            <div class="space-y-8 max-w-3xl mx-auto"> 
+                
+                <!-- Feature 1: Pro Audio FX -->
+                <div class="frosted-card p-6 rounded-xl animate-on-scroll">
+                    <i data-lucide="equalizer" class="w-8 h-8 rayfield-accent mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Professional Audio FX</h3>
+                    <!-- Markdown Content to be Parsed -->
+                    <p class="opacity-70 text-sm markdown-content" data-markdown="
+                        Fine-tune your sound profile with a dedicated 3-band **Equalizer** (Low, Mid, High), customizable **Reverb** (Decay Time, Density), and a powerful one-click **Bass Booster**.
+                    "></p>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">3-Band EQ</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Custom Reverb</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke rayfield-accent font-bold">Bass Boost</span>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Precision Control -->
+                <div class="frosted-card p-6 rounded-xl animate-on-scroll" style="transition-delay: 100ms;">
+                    <i data-lucide="gauge-circle" class="w-8 h-8 rayfield-accent mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Precision Playback</h3>
+                    <!-- Markdown Content to be Parsed -->
+                    <p class="opacity-70 text-sm markdown-content" data-markdown="
+                        Take full control of the current track. Adjust speed for **Nightcore/Slowed** effects, use custom duration **Rewind/Forward** buttons, and smoothly **Fade Out/In** when pausing or receiving notifications.
+                    "></p>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Speed Slider</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Custom Skip</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Volume Fading</span>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Local Playlist Management -->
+                <div class="frosted-card p-6 rounded-xl animate-on-scroll" style="transition-delay: 200ms;">
+                    <i data-lucide="list-music" class="w-8 h-8 rayfield-accent mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Local Playlist Management</h3>
+                    <!-- Markdown Content to be Parsed -->
+                    <p class="opacity-70 text-sm markdown-content" data-markdown="
+                        Effortlessly load tracks (.mp3, .ogg, .wav, .flac) from local executor folders. Organize them into custom playlists and utilize **Loop Track**, **Loop Playlist**, and intelligent **Shuffle** modes.
+                    "></p>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">MP3/FLAC Support</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Shuffle Mode</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Seamless Looping</span>
+                    </div>
+                </div>
+                
+                <!-- Feature 4: UX & Aesthetics -->
+                <div class="frosted-card p-6 rounded-xl animate-on-scroll" style="transition-delay: 300ms;">
+                    <i data-lucide="monitor-dot" class="w-8 h-8 rayfield-accent mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Rayfield UI & StoneCream Aesthetics</h3>
+                    <!-- Markdown Content to be Parsed -->
+                    <p class="opacity-70 text-sm markdown-content" data-markdown="
+                        Built upon the robust Rayfield UI Library, RayBeats delivers a clean, responsive, and intuitive interface. The exclusive **StoneCream** theme provides a unique, minimalist dark aesthetic that stands out in any Roblox game. Includes features like RichText support and optional notification haptics.
+                    "></p>
+                    <div class="mt-4 flex flex-wrap gap-2 text-xs font-mono">
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Rayfield Core</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke rayfield-accent font-bold">StoneCream Theme</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">RichText Support</span>
+                        <span class="px-2 py-0.5 rounded bg-rb-topbar border border-rb-stroke">Notification Haptics</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- HOW TO USE SECTION -->
+        <section id="how-to" class="space-y-10 pt-16">
+            <h2 class="text-4xl font-bold text-center mb-10">Simple <span class="rayfield-accent">Usage Guide</span></h2>
+            
+            <div class="max-w-4xl mx-auto space-y-6">
+                <!-- Step 1 -->
+                <div class="frosted-card p-5 rounded-lg flex items-start space-x-4 animate-on-scroll">
+                    <span class="text-2xl font-mono rayfield-accent">01.</span>
+                    <div>
+                        <h3 class="text-xl font-semibold">Prepare Your Audio Files</h3>
+                        <p class="opacity-70 text-sm markdown-content" data-markdown="
+                            Open your device's file explorer and navigate to the main workspace directory used by your executor (where external script data is stored).
+                        "></p>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="frosted-card p-5 rounded-lg flex items-start space-x-4 animate-on-scroll" style="transition-delay: 100ms;">
+                    <span class="text-2xl font-mono rayfield-accent">02.</span>
+                    <div>
+                        <h3 class="text-xl font-semibold">Create Playlist Folders</h3>
+                        <p class="opacity-70 text-sm markdown-content" data-markdown="
+                            Create a folder named **RayBeats**. Inside it, create subfolders for your custom playlists (e.g., **RayBeats/My Vibe** or **RayBeats/Lo-Fi**). Place your supported audio files inside.
+                        "></p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="frosted-card p-5 rounded-lg flex items-start space-x-4 animate-on-scroll" style="transition-delay: 200ms;">
+                    <span class="text-2xl font-mono rayfield-accent">03.</span>
+                    <div>
+                        <h3 class="text-xl font-semibold">Execute and Play</h3>
+                        <p class="opacity-70 text-sm markdown-content" data-markdown="
+                            Execute the RayBeats script in Roblox. The system will automatically detect and load your tracks. Your playlists will appear as tabs, ready for immediate playback.
+                        "></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA / Credit Section -->
+        <section id="cta" class="space-y-8 pt-16 text-center">
+            <h2 class="text-4xl font-bold mb-4">Ready to <span class="rayfield-accent">Vibe Up</span> Your Game?</h2>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                
+                <!-- Get Script Card -->
+                <div class="frosted-card p-6 rounded-xl animate-on-scroll">
+                    <h3 class="text-xl font-semibold mb-3">Get the Script</h3>
+                    <p class="opacity-70 text-sm mb-4">
+                        Copy the latest version of RayBeats directly from the GitHub source.
+                    </p>
+                    <a href="https://raw.githubusercontent.com/reprenzy-hue/RayBeats/refs/heads/main/source.lua" class="rayfield-button w-full bg-rb-element hover:bg-rb-accent-main hover:text-rb-text-dark font-bold transition duration-300">
+                        <i data-lucide="copy" class="w-4 h-4 mr-2"></i> Copy Lua Source
+                    </a>
+                </div>
+                
+                <!-- Credits & Community Card -->
+                <div id="credits" class="frosted-card p-6 rounded-xl animate-on-scroll" style="transition-delay: 100ms;">
+                    <h3 class="text-xl font-semibold mb-3">Community & Dev</h3>
+                    <p class="opacity-70 text-sm mb-4">
+                        Connect with **Fyan** and the community for updates and feedback.
+                    </p>
+                    <div class="space-y-2">
+                        <a href="https://youtube.com/@fyandeveloper?si=B-HhhsLTq1iGzN8t" class="rayfield-button w-full text-red-500 hover:text-white transition duration-200">
+                            <i data-lucide="youtube" class="w-4 h-4 mr-2"></i> Subscribe on YouTube
+                        </a>
+                        <a href="https://www.tiktok.com/@fyan.developers?_r=1&_t=ZS-91T59bevA01" class="rayfield-button w-full" style="color:#25F4EE; hover:text-white">
+                            <i data-lucide="instagram" class="w-4 h-4 mr-2"></i> Follow on TikTok
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-6 mt-24 border-t border-rb-stroke opacity-70">
+        <p class="text-sm">Styled with **StoneCream** Aesthetic. RayBeats by Fyan (FynLabs) © 2025.</p>
+    </footer>
+
+    <script>
+        // Simple Markdown Parser Function (only handles **bold**)
+        function parseMarkdown(text) {
+            // Replace **text** with <b>text</b>
+            return text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+        }
+
+        // JavaScript for Intersection Observer (Animation on Scroll)
+        function setupIntersectionObserver() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Add class to trigger animation when in view
+                        entry.target.classList.add('in-view');
+                        // Stop observing once animated
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of element is visible
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+        
+        // Function to process all markdown-content elements
+        function processMarkdownContent() {
+            document.querySelectorAll('.markdown-content').forEach(el => {
+                const mdText = el.getAttribute('data-markdown');
+                if (mdText) {
+                    el.innerHTML = parseMarkdown(mdText.trim());
+                }
+            });
+        }
+
+        // Initialize Lucide Icons and start processing
+        window.onload = function() {
+            lucide.createIcons();
+            processMarkdownContent();
+            setupIntersectionObserver();
+        };
+    </script>
+</body>
+</html>
+
